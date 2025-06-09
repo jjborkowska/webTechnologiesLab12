@@ -38,7 +38,7 @@ jobs:
       - name: install npm
         run: npm install
       - name: build npm
-        run: npm run build -- --base=/test-repo/
+        run: npm run build -- --base=/webTechnologiesLab12/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
