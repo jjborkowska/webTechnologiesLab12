@@ -5,9 +5,9 @@ import { format } from 'date-fns';
 document.querySelector('#app').innerHTML = `
   <div id="sort-field">
   <label for="sort-select" class="select-header">Sort by: </label><select id="sort-select">
-    <option value="created_at.asc">Ascending</option>
-    <option value="created_at.desc" selected>Descending</option>
-    <option value="title.asc">Alphabetically</option>
+    <option value="created_at.asc">Date Ascending</option>
+    <option value="created_at.desc" selected>Date Descending</option>
+    <option value="title.asc">Names Alphabetically</option>
   </select>
   </div>
   <ul id="articles-list"></ul>
