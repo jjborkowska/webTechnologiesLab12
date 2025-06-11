@@ -79,8 +79,12 @@ appElement.appendChild(articlesList);
 
 }
 
+
 document.addEventListener('DOMContentLoaded', async () => {
   console.log("DOM fully loaded and parsed. Fetching articles...");
+  if (appElement) {
+    appElement.innerHTML = '<p>Loading articles...</p>';
+  }
   const articles = await fetchArticles(); 
   if (articles) { 
     showArticles(articles); 
@@ -89,4 +93,78 @@ document.addEventListener('DOMContentLoaded', async () => {
         appElement.innerHTML = '<p>Failed to load articles. Please try again later.</p>';
     }
   }
+  createArticleForm(); 
 });
+
+
+function createArticleForm() {
+  
+  const form = document.createElement('form');
+  form.id = 'article-form';
+  form.style.marginTop = '2em';
+
+  form.innerHTML = `
+    <h2>Add New Article</h2>
+    <input type="text" id="title" placeholder="Title" required /><br />
+    <input type="text" id="subtitle" placeholder="Subtitle" /><br />
+    <input type="text" id="author" placeholder="Author" required /><br />
+    <textarea id="content" placeholder="Content" required></textarea><br />
+    <button type="submit">Add Article</button>
+    <div id="form-message" style="margin-top:0.5em;"></div>
+  `;
+
+
+  if (appElement && appElement.parentNode) {
+    appElement.parentNode.appendChild(form);
+  } else {
+    document.body.appendChild(form);
+  }
+
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = form.querySelector('#title').value.trim();
+    const subtitle = form.querySelector('#subtitle').value.trim();
+    const author = form.querySelector('#author').value.trim();
+    const content = form.querySelector('#content').value.trim();
+    const messageDiv = form.querySelector('#form-message');
+
+    if (!title || !author || !content) {
+      messageDiv.textContent = 'Title, author, and content are required.';
+      messageDiv.style.color = 'red';
+      return;
+    }
+
+    const newArticle = { title, subtitle, author, content };
+
+    try {
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/article`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify(newArticle)
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to add article');
+      }
+
+      messageDiv.textContent = 'Article added successfully!';
+      messageDiv.style.color = 'green';
+      form.reset();
+
+      const articles = await fetchArticles();
+      showArticles(articles);
+
+    } catch (error) {
+      messageDiv.textContent = 'Error: ' + error.message;
+      messageDiv.style.color = 'red';
+    }
+  });
+};
