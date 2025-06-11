@@ -95,7 +95,7 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify(newArticle),
     });
     if (!response.ok) {
-      throw new Error (`Status: ${response.status}`)
+      throw new Error(`Status: ${response.status}`)
     }
     fetchArticles();
     form.reset();
