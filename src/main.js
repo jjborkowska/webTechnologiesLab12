@@ -68,7 +68,7 @@ articles.forEach(article => {
       <p class="article-content">${article.content ? article.content : 'No content'}</p>
       <small>
         ${article.author ? `Author: ${article.author}` : 'Unknown author'}
-        ${article.created_at ? ` | Created at: ${new Date(article.created_at).toLocaleDateString('en-EN')}` : ''}
+        ${article.created_at ? ` | Created at: ${format(new Date(article.created_at),'dd-MM-yyyy')}` : ''}
       </small>
     `;
 
